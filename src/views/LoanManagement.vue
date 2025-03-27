@@ -40,7 +40,7 @@ import { ref, onMounted } from 'vue'
 const loans = ref<any[]>([])
 const loading = ref(true)
 
-const API_URL = 'https://x002gqvha4.execute-api.ap-northeast-1.amazonaws.com/dev/loans' // ← Lambda側を貸出管理にしたらパスも変えるならここ変更
+const API_URL = 'https://x002gqvha4.execute-api.ap-northeast-1.amazonaws.com/dev/loans'
 
 const formatDate = (value: string | null) => {
   if (!value) return ''

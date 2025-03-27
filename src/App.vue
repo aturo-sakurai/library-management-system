@@ -10,13 +10,13 @@ const currentTab = ref('loan')
 
 <template>
   <div>
-    <h1>📘 書籍貸出システム</h1>
+    <h1>書籍貸出システム</h1>
 
     <!-- タブボタン -->
     <div style="margin-bottom: 1rem;">
-      <button @click="currentTab = 'loan'">📖 書籍貸出管理</button>
-      <button @click="currentTab = 'book'">📚 書籍登録</button>
-      <button @click="currentTab = 'user'">👤 ユーザー登録</button>
+      <button @click="currentTab = 'loan'">書籍貸出管理</button>
+      <button @click="currentTab = 'book'">書籍登録</button>
+      <button @click="currentTab = 'user'">ユーザー登録</button>
     </div>
 
     <!-- タブの中身 -->
