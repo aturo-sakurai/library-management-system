@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/books": {
+      "name": "/books",
+      "lambdaFunction": "librarymanagementsys87e4bd4f",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "api": {
+    "apidd1cb878": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "librarymanagementsys87e4bd4f"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "librarymanagementsys87e4bd4f": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_librarymanagementsys87e4bd4f_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "librarymanagementsys87e4bd4f"
+        }
+      ]
+    },
+    "AMPLIFY_function_librarymanagementsys87e4bd4f_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "librarymanagementsys87e4bd4f"
+        }
+      ]
+    }
+  }
+}
