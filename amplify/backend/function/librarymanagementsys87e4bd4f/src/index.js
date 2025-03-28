@@ -1,7 +1,3 @@
-/* Amplify Params - DO NOT EDIT
-	ENV
-	REGION
-Amplify Params - DO NOT EDIT */
 const { Client } = require('pg');
 
 exports.handler = async (event) => {
@@ -15,39 +11,37 @@ exports.handler = async (event) => {
     database: 'postgres',
   });
 
-  const userId = event.queryStringParameters?.userId;
-
   try {
     await client.connect();
 
-    let query = `
-      SELECT 
-        l."貸出ID", 
-        l."利用者ID", 
+    const query = `
+        SELECT
+        l."貸出id",
+        l."利用者id",
         u."名前" AS "利用者名",
-        l."書籍ID", 
+        l."書籍id",
         b."タイトル" AS "書籍タイトル",
-        l."貸出日", 
-        l."返却期限", 
-        CASE 
-          WHEN l."返却済み" THEN 'はい'
-          ELSE 'いいえ'
+        l."貸出日",
+        l."返却期限",
+        CASE
+            WHEN l."返却済み" = true THEN 'はい'
+            ELSE 'いいえ'
         END AS "返却済み",
         l."返却日"
-      FROM "貸出管理" l
-      JOIN "利用者" u ON l."利用者ID" = u."利用者ID"
-      JOIN "書籍" b ON l."書籍ID" = b."書籍ID"
-    `;
+        FROM "貸出管理" l
+        JOIN "利用者" u ON l."利用者id" = u."利用者id"
+        JOIN "書籍" b ON l."書籍id" = b."書籍id";
+            `;
 
-    const values = [];
+    const res = await client.query(query);
 
-    if (userId) {
-      query += ` WHERE l."利用者ID" = $1`;
-      values.push(userId);
-    }
+    // 「返却済み」を「はい / いいえ」に変換
+    const formattedRows = res.rows.map(row => ({
+      ...row,
+      返却済み: row.返却済み === true ? "はい" : "いいえ",
+    }));
 
-    const res = await client.query(query, values);
-    console.log("📚 検索結果:", res.rows);
+    console.log("📚 貸出データ一覧:", formattedRows);
 
     await client.end();
 
@@ -55,15 +49,18 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Headers": "*"
       },
-      body: JSON.stringify(res.rows),
+      body: JSON.stringify(formattedRows),
     };
   } catch (error) {
     console.error("❌ DB接続エラー:", error);
 
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify({ message: "Internal Server Error" }),
     };
   }
