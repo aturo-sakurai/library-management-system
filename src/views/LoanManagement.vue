@@ -10,7 +10,9 @@
     />
 
     <div v-if="loading">読み込み中...</div>
-    <table v-else class="loan-table">
+
+    <!-- loansが1件以上ある時だけ表示 -->
+    <table v-if="!loading && loans.length > 0" class="loan-table">
       <thead>
         <tr>
           <th>貸出ID</th>
@@ -25,11 +27,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in loans" :key="item.貸出id">
-          <td>{{ item.貸出id }}</td>
-          <td>{{ item.利用者id }}</td>
+        <tr v-for="item in loans" :key="item.貸出ID">
+          <td>{{ item.貸出ID }}</td>
+          <td>{{ item.利用者ID }}</td>
           <td>{{ item.利用者名 }}</td>
-          <td>{{ item.書籍id }}</td>
+          <td>{{ item.書籍ID }}</td>
           <td>{{ item.書籍タイトル }}</td>
           <td>{{ formatDate(item.貸出日) }}</td>
           <td>{{ formatDate(item.返却期限) }}</td>
@@ -42,10 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const loans = ref<any[]>([])
-const loading = ref(true)
+const loading = ref(false)
 const searchUserId = ref('')
 
 const API_BASE_URL = 'https://x002gqvha4.execute-api.ap-northeast-1.amazonaws.com/dev/loans'
@@ -56,11 +58,10 @@ const formatDate = (value: string | null) => {
 }
 
 const fetchLoans = async () => {
+  if (!searchUserId.value) return
   loading.value = true
   try {
-    const url = searchUserId.value
-      ? `${API_BASE_URL}?userId=${encodeURIComponent(searchUserId.value)}`
-      : API_BASE_URL
+    const url = `${API_BASE_URL}?userId=${encodeURIComponent(searchUserId.value)}`
     const res = await fetch(url)
     const data = await res.json()
     console.log("📦 フィルタ済みデータ:", data)
@@ -71,8 +72,6 @@ const fetchLoans = async () => {
     loading.value = false
   }
 }
-
-onMounted(fetchLoans)
 </script>
 
 <style scoped>
